@@ -1,2 +1,4 @@
 node_modules
+package-log.json
+.DS_store
 .env
