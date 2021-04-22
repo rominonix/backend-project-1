@@ -71,7 +71,3 @@ User.bulkCreate([
 // bcrypt.hash(process.env.MIKE, 10, function(err, hash){
 //     run('murdering.mike@fuskeluring.hack',hash)
 // })
-
-
-
-// modules.export = sequelize

@@ -1,4 +1,6 @@
 const {DataTypes} = require('sequelize')
+const jwt = require('jsonwebtoken')
+const bcryptjs = require('bcryptjs')
 const db = require('../database/connection')
 
 const User = db.define('Users',{
@@ -12,5 +14,19 @@ const User = db.define('Users',{
         allowNull: false,
     } 
 })
+
+User.authenticate = async ( email, password ) => {
+    const getUser = await User.findOne({ where: {email}})
+    if(!getUser){ 
+        console.log("User not found")
+    }
+    const passwordMatch = bcryptjs.compareSync(password, getUser.password)
+    if(passwordMatch){
+        const payload = {id:getUser.id, email: getUser.email}
+        return jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'1w'})
+    } else {
+        //error
+    }
+}
 
 module.exports = User
