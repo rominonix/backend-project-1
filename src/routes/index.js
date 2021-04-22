@@ -54,15 +54,15 @@ Routes.post('/login', async (req, res)=> {
 //  })
 
 //  router.get('/me', (res, req)=>{
-//     console.log("Are you ready bitch?");
+//     console.log("Are you ready?");
 //  })
 
 //  router.patch('/me', (res, req)=>{
-//     console.log("Are you ready bitch?");
+//     console.log("Are you ready?");
 //  })
 
 //  router.get('/generate', (res, req)=>{
-//     console.log("Are you ready bitch?");
+//     console.log("Are you ready?");
 //  })
 
 
