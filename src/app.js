@@ -11,7 +11,6 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 app.use(Routes)
 
-
 app.listen(PORT, () => {
     console.log(`Server on port: ${PORT}`);
 })

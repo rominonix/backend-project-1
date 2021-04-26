@@ -1,9 +1,10 @@
-const {DataTypes} = require('sequelize')
+const { DataTypes } = require('sequelize')
 const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
 const db = require('../database/connection')
+const { InvalidCredentials, InvalidBody } = require('../errors')
 
-const User = db.define('Users',{
+const User = db.define('Users', {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -12,20 +13,35 @@ const User = db.define('Users',{
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    } 
+    }
 })
 
-User.authenticate = async ( email, password ) => {
-    const getUser = await User.findOne({ where: {email}})
-    if(!getUser){ 
-        console.log("User not found")
-    }
-    const passwordMatch = bcryptjs.compareSync(password, getUser.password)
-    if(passwordMatch){
-        const payload = {id:getUser.id, email: getUser.email}
-        return jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'1w'})
+User.authenticate = async (email, password) => {
+    const user = await User.findOne({ where: { email } })
+    if (!user) { throw new InvalidCredentials() }
+
+    const passwordMatch = bcryptjs.compareSync(password, user.password)
+    if (passwordMatch) {
+        const payload = { id: user.id, email: user.email }
+        return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1w' })
     } else {
-        //error
+        throw new InvalidCredentials()
+    }
+}
+
+User.validateToken = (token) => {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET)
+    } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            return false
+        } else if (error instanceof jwt.JsonWebTokenError) {
+            return false
+        } else {
+            return false
+            // throw error
+            // return false
+        }
     }
 }
 
