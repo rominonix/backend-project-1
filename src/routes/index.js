@@ -17,7 +17,7 @@ Routes.patch('/me', (res, req) => {
     res.json({ msg: "Update me" })
 })
 
-// Routes.get('/generate', Throttling, Controller.generate)
-Routes.get('/generate', generateControl.generate)
+// Routes.get('/generate', Throttling, generateController.generate)
+Routes.get('/generate', Auth.user, generateControl.generate)
 
 module.exports = Routes

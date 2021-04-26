@@ -5,16 +5,41 @@ const db = require('../database/connection')
 const { InvalidCredentials, InvalidBody } = require('../errors')
 
 const User = db.define('Users', {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
     email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
+
     password: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+
+    counter: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+        defaultValue: 0
+    },
+
+    date: {
+        type: DataTypes.DATE,
+        allowNull: false
     }
 })
+
+// sequelize.sync().then(()=>{
+//     console.log("Setting up new table")
+// }).catch((err)=>{
+//     console.log("Looks like we got some error")
+//     console.log(err)
+// })
+
 
 User.authenticate = async (email, password) => {
     const user = await User.findOne({ where: { email } })

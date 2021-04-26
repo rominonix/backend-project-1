@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize')
 const bcrypt = require('bcryptjs')
 require('dotenv').config({ path: `../../.env` })
+// const User = require('../models/User')
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -8,15 +9,32 @@ const sequelize = new Sequelize({
 })
 
 const User = sequelize.define('Users',{
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+
     email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
+
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    } 
+    },
+
+    counter: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+        defaultValue: 0
+    },
+
+    date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    }
 })
 
 sequelize.sync().then(()=>{
@@ -25,6 +43,7 @@ sequelize.sync().then(()=>{
     console.log("Looks like we got some error")
     console.log(err)
 })
+
 
 const steve = process.env.STEVE
 const pass1 = bcrypt.hashSync(steve,10)
@@ -37,9 +56,9 @@ const pass3 = bcrypt.hashSync(mike,10)
 
 
 User.bulkCreate([
-    { email: 'stabbing.steve@fuskeluring.hack', password: pass1 },
-    { email: 'crimes.johnsson@fuskeluring.hack', password: pass2 },
-    { email: 'murdering.mike@fuskeluring.hack', password: pass3 },
+    { name: 'Steve Stabbing', email: 'stabbing.steve@fuskeluring.hack', password: pass1, counter: 0, date: Date.now()},
+    { name: 'Crimes Johnsson', email: 'crimes.johnsson@fuskeluring.hack', password: pass2, counter: 0, date: Date.now()},
+    { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now() },
   ]).then(() => { // Notice: There are no arguments here, as of right now you'll have to...
     return User.findAll();
   }).then(users => {
@@ -47,6 +66,8 @@ User.bulkCreate([
   }).catch(error=>{
       console.log(error)
   })
+
+
 
 // async function run( email, password){
 //     const user = await User.build(

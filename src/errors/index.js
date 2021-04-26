@@ -1,7 +1,6 @@
-class AppError extends Error{}
-
-class InvalidBody extends AppError{
-    constructor(){
+class AppError extends Error { }
+class InvalidBody extends AppError {
+    constructor() {
         super()
         this.message = 'Invalid body, please fill in the fields'
         this.errorCode = 400
@@ -15,25 +14,32 @@ class InvalidBody extends AppError{
     // }
 }
 
-class InvalidCredentials extends AppError{
-    constructor(){
+class InvalidCredentials extends AppError {
+    constructor() {
         super()
         this.message = 'Invalid credentials, please try again'
         this.errorCode = 403
     }
 }
-
-class TokenExpired extends AppError{
-    constructor(){
+class TokenExpired extends AppError {
+    constructor() {
         super()
-        this.message = 'Token expired, '
+        this.message = 'Token expired'
     }
 }
 
-class Unauthorized extends AppError{
-    constructor(){
+class Unauthorized extends AppError {
+    constructor() {
         super()
         this.message = 'Unauthorized'
+        this.errorCode = 401
+    }
+}
+
+class ExcessRequest extends AppError {
+    constructor() {
+        super()
+        this.message = 'You have created the maximum number of daily accounts, try again tomorrow!'
         this.errorCode = 401
     }
 }
@@ -43,5 +49,6 @@ module.exports = {
     InvalidBody,
     InvalidCredentials,
     TokenExpired,
-    Unauthorized
+    Unauthorized,
+    ExcessRequest
 }
