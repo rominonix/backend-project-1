@@ -11,13 +11,9 @@ Routes.get('/', (req, res) => {
 Routes.post('/login', userController.login)
 
 Routes.get('/me', Auth.user, userController.me)
-// console.log(res.locals.me)
-// res.render('me')
-Routes.patch('/me', (res, req) => {
-    res.json({ msg: "Update me" })
-})
 
-// Routes.get('/generate', Throttling, generateController.generate)
+Routes.patch('/me', Auth.user, userController.updatePassword)
+
 Routes.get('/generate', Auth.user, generateControl.generate)
 
 module.exports = Routes

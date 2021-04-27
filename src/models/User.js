@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
 const db = require('../database/connection')
-const { InvalidCredentials, InvalidBody } = require('../errors')
+const { InvalidCredentials, TokenExpired, Unauthorized } = require('../errors')
 
 const User = db.define('Users', {
     name: {
@@ -33,14 +33,6 @@ const User = db.define('Users', {
     }
 })
 
-// sequelize.sync().then(()=>{
-//     console.log("Setting up new table")
-// }).catch((err)=>{
-//     console.log("Looks like we got some error")
-//     console.log(err)
-// })
-
-
 User.authenticate = async (email, password) => {
     const user = await User.findOne({ where: { email } })
     if (!user) { throw new InvalidCredentials() }
@@ -59,13 +51,11 @@ User.validateToken = (token) => {
         return jwt.verify(token, process.env.JWT_SECRET)
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
-            return false
+            throw new TokenExpired()
         } else if (error instanceof jwt.JsonWebTokenError) {
-            return false
+            throw new Unauthorized()
         } else {
-            return false
-            // throw error
-            // return false
+            throw error
         }
     }
 }

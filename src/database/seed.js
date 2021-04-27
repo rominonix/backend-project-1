@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize')
 const bcrypt = require('bcryptjs')
 require('dotenv').config({ path: `../../.env` })
-// const User = require('../models/User')
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -58,15 +57,14 @@ const pass3 = bcrypt.hashSync(mike,10)
 User.bulkCreate([
     { name: 'Steve Stabbing', email: 'stabbing.steve@fuskeluring.hack', password: pass1, counter: 0, date: Date.now()},
     { name: 'Crimes Johnsson', email: 'crimes.johnsson@fuskeluring.hack', password: pass2, counter: 0, date: Date.now()},
-    { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now() },
-  ]).then(() => { // Notice: There are no arguments here, as of right now you'll have to...
+    { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now()},
+  ]).then(() => { 
     return User.findAll();
   }).then(users => {
-    console.log(users) // ... in order to get the array of user objects
+    console.log(users) 
   }).catch(error=>{
       console.log(error)
   })
-
 
 
 // async function run( email, password){

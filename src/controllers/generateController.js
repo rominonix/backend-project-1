@@ -1,49 +1,13 @@
 const faker = require('faker')
-const db = require('../database/connection')
+// const db = require('../database/connection')
 const User = require('../models/User')
-const { ExcessRequest } = require('../errors/index')
-// const { DATEONLY } = require('sequelize/types')
-
-
 
 module.exports = {
-   async generate(req, res, next) {
-        // let counter = 0
-        const user = res.locals.user
-        // console.log(user);
-        const email = user.email
-       
-        const userDb = await User.findOne({ where: { email} })
-        const dbCounter = userDb.counter
-        const dbDate = userDb.date
-        const date = new Date(dbDate)
-
-        // const currentDate =`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}` 
-
-        // const compareDate = new Date(dbDate)
-    
-        // const compareDate = new Date(dbDate)
-        console.log('las fechas');
-        console.log(dbDate);
-        console.log(date);
-
-        // await userDb.increment('counter', { by: 1})
-        
-        if(dbCounter >= 10 ){
-            res.send({msn: 'nomore'})
-            // throw new ExcessRequest
-        }
-
-
-        // console.log(email2);
-    
-        // Check database for number of profiles create
-        // mikeFromDatabase = db.findOne(where emailaddress== mike)
-        // mikeFromdatabase.genCounter
+    async generate(req, res, next) {
 
         const newBirthday = () => {
             let date = faker.date.between('1945-01-01', '2003-12-31')
-            return `${date.getFullYear()} / ${date.getMonth()} / ${date.getDay()}`
+            return `${date.getFullYear()} / ${date.getMonth()+1} / ${date.getDay()+1}`
         }
 
         const newDistinction = () => {
@@ -56,8 +20,8 @@ module.exports = {
             const newFakeProfile = {
                 'name': faker.name.findName(),
                 'address': {
-                    'city': faker.address.city(),
                     'street': faker.address.streetAddress(),
+                    'city': faker.address.city(),
                     'zip': faker.address.zipCode(),
                     'country': faker.address.country()
                 },
@@ -68,12 +32,41 @@ module.exports = {
             }
             return newFakeProfile
         }
-        const fakeUser = fakeProfile()
 
-        
-        // db.update(where emailADdress == mike, getCounter++)
+        const email = res.user.email
+        const userDb = await User.findOne({ where: { email } })
 
-        res.render("generate", { fakeUser })
+        const dbCounter = userDb.counter
+        await userDb.increment('counter', { by: 1 })
+
+        let day = 1000 * 60 * 60 * 24
+        const dbDate = userDb.date
+
+        let dbDateEpoch = dbDate.getTime()
+
+        const currentDate = new Date().getTime()
+        let oneMoreDay = dbDateEpoch + day
+
+        if (oneMoreDay > currentDate) {
+
+            if (dbCounter <= 9) {
+                const fakeUser = fakeProfile()
+                userDb.date = Date.now()
+                await userDb.save()
+                res.render("generate", { fakeUser })
+            } else {
+                res.send({ msn: 'You have created the maximum number of daily accounts, try it in 24 hours' })
+            }
+        }
+        else {
+            userDb.counter = 0
+            await userDb.save()
+            const fakeUser = fakeProfile()
+            userDb.date = Date.now()
+            await userDb.increment('counter', { by: 1 })
+            await userDb.save()
+            res.render("generate", { fakeUser })
+        }
     }
 }
 
