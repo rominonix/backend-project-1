@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
 const db = require('../database/connection')
-const { InvalidCredentials, TokenExpired, Unauthorized } = require('../errors')
+const { InvalidCredentials, TokenExpired, Unauthorized } = require('../errors/index')
 
 const User = db.define('Users', {
     name: {
@@ -30,6 +30,12 @@ const User = db.define('Users', {
     date: {
         type: DataTypes.DATE,
         allowNull: false
+    }, 
+
+    role: {
+        type: DataTypes.STRING,
+        enum: ['user', 'admin'], 
+        defaultValue: 'user'
     }
 })
 
@@ -39,7 +45,7 @@ User.authenticate = async (email, password) => {
 
     const passwordMatch = bcryptjs.compareSync(password, user.password)
     if (passwordMatch) {
-        const payload = { id: user.id, email: user.email }
+        const payload = { id: user.id, email: user.email, role: user.role }
         return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1w' })
     } else {
         throw new InvalidCredentials()
@@ -59,5 +65,18 @@ User.validateToken = (token) => {
         }
     }
 }
+
+User.updatePassword = async (email, newPassword) => {
+    const user = await User.findOne({ where: { email } })
+    if (!user) { throw new InvalidCredentials() }
+    else {
+        const newPassHash = bcryptjs.hashSync(newPassword, 10)
+        const newPass = await User.findOne({ where: { email } })
+        newPass.password = newPassHash
+        await newPass.save()
+    }
+}
+
+
 
 module.exports = User

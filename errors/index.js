@@ -5,13 +5,6 @@ class InvalidBody extends AppError {
         this.message = 'Invalid body, please try again'
         this.errorCode = 400
     }
-
-    // constructor(fields){
-    //     super()
-    //     this.fields = fields
-    //     this.message = `Invalid body, required field: ${this.fields.join(', ')}`
-    //     this.errorCode = 400
-    // }
 }
 class InvalidCredentials extends AppError {
     constructor() {
@@ -34,11 +27,19 @@ class Unauthorized extends AppError {
     }
 }
 
+class Forbidden extends AppError{
+    constructor(){
+      super()    
+      this.message = `Forbidden`
+      this.errorCode = 403
+    }
+  }
 
 module.exports = {
     AppError,
     InvalidBody,
     InvalidCredentials,
     TokenExpired,
-    Unauthorized
+    Unauthorized,
+    Forbidden
 }

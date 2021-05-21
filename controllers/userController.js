@@ -1,8 +1,14 @@
 const User = require('../models/User')
 const { InvalidBody } = require('../errors/index')
-const bcrypt = require('bcryptjs')
 
 module.exports = {
+
+    async all(req,res,next){
+        try{
+          const users = await User.findAll({attributes:{exclude:['password']}})
+          res.json({users})
+        }catch(error){ next(error) }
+      },
     
     async login(req, res, next) {
         try {
@@ -17,22 +23,18 @@ module.exports = {
         const email = res.user.email
         const userFromDatabase = await User.findOne({ where: { email } })
         const name = userFromDatabase.name  
-        res.render('me', { "email": email, "name": name })
+        res.json({ "email": email, "name": name })
     },
 
-    async updatePassword(req, res, next) {
+    async updateUserPassword(req, res, next) {
         const email = res.user.email
         try {
             const { newPassword } = req.body
             if (!email || !newPassword) {
                 throw new InvalidBody()
-            } else {
-                const newPassHash = bcrypt.hashSync(newPassword, 10)
-                const newPass = await User.findOne({ where: { email } })
-                newPass.password = newPassHash
-                await newPass.save()
-                res.send({ msn: "Password updated successfully!" })
             }
+            const newPassToDb = await User.updatePassword(email, newPassword)
+            res.json({ newPassToDb, msn: "Your profile was updated successfully" })
         } catch (error) { next(error) }
-    }
+    },
 }
