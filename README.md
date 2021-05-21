@@ -1,11 +1,37 @@
+# Trollskogen project
+
+## Installation
+
 ```
-                                                          
-  *   )           (   (         )                         
-` )  /( (         )\  )\     ( /(      (  (     (         
- ( )(_)))(    (  ((_)((_)(   )\()) (   )\))(   ))\  (     
-(_(_())(()\   )\  _   _  )\ ((_)\  )\ ((_))\  /((_) )\ )  
-|_   _| ((_) ((_)| | | |((_)| |(_)((_) (()(_)(_))  _(_/(  
-  | |  | '_|/ _ \| | | |(_-<| / // _ \/ _` | / -_)| ' \)) 
-  |_|  |_|  \___/|_| |_|/__/|_\_\\___/\__, | \___||_||_|  
-                                      |___/               
+npm install
+
+```
+
+## Setup / Configuration
+
+#### Create an .env file with the following content
+
+```
+PORT=5000
+STEVE=supersecretpassword
+MIKE=supersecretpassword
+JOHNSSON=supersecretpassword
+JWT_SECRET=supersecretpassword
+
+```
+Remember to change the "supersecretpassword" to your own password.
+
+#### Run database and seed file.
+
+```
+node database/setup.js && node database/seed.js
+
+```
+
+## Run server
+
+```
+npm run dev
+
+```
 
