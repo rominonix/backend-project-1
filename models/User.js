@@ -30,11 +30,11 @@ const User = db.define('Users', {
     date: {
         type: DataTypes.DATE,
         allowNull: false
-    }, 
+    },
 
     role: {
         type: DataTypes.STRING,
-        enum: ['user', 'admin'], 
+        enum: ['user', 'admin'],
         defaultValue: 'user'
     }
 })

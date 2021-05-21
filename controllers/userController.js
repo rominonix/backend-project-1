@@ -3,13 +3,13 @@ const { InvalidBody } = require('../errors/index')
 
 module.exports = {
 
-    async all(req,res,next){
-        try{
-          const users = await User.findAll({attributes:{exclude:['password']}})
-          res.json({users})
-        }catch(error){ next(error) }
-      },
-    
+    async all(req, res, next) {
+        try {
+            const users = await User.findAll({ attributes: { exclude: ['password'] } })
+            res.json({ users })
+        } catch (error) { next(error) }
+    },
+
     async login(req, res, next) {
         try {
             const { email, password } = req.body
@@ -22,7 +22,7 @@ module.exports = {
     async me(req, res, next) {
         const email = res.user.email
         const userFromDatabase = await User.findOne({ where: { email } })
-        const name = userFromDatabase.name  
+        const name = userFromDatabase.name
         res.json({ "email": email, "name": name })
     },
 

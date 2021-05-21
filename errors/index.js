@@ -27,13 +27,13 @@ class Unauthorized extends AppError {
     }
 }
 
-class Forbidden extends AppError{
-    constructor(){
-      super()    
-      this.message = `Forbidden`
-      this.errorCode = 403
+class Forbidden extends AppError {
+    constructor() {
+        super()
+        this.message = `Forbidden`
+        this.errorCode = 403
     }
-  }
+}
 
 module.exports = {
     AppError,

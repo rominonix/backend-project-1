@@ -15,28 +15,12 @@ const pass3 = bcrypt.hashSync(mike, 10)
 
 
 User.bulkCreate([
-  { name: 'Steve Stabbing', email: 'stabbing.steve@fuskeluring.hack', password: pass1, counter: 0, date: Date.now(), role: 'admin'},
-  { name: 'Crimes Johnsson', email: 'crimes.johnsson@fuskeluring.hack', password: pass2, counter: 0, date: Date.now()},
-  { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now()},
-]).then(() => { 
+  { name: 'Steve Stabbing', email: 'stabbing.steve@fuskeluring.hack', password: pass1, counter: 0, date: Date.now(), role: 'admin' },
+  { name: 'Crimes Johnsson', email: 'crimes.johnsson@fuskeluring.hack', password: pass2, counter: 0, date: Date.now() },
+  { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now() },
+]).then(() => {
   return User.findAll();
-}).catch(error=>{
-    console.log(error)
+}).catch(error => {
+  console.log(error)
 })
 
-// db.sync().then(()=>{
-//     console.log("Setting up new table")
-//     User.bulkCreate([
-//         { name: 'Steve Stabbing', email: 'stabbing.steve@fuskeluring.hack', password: pass1, counter: 0, date: Date.now(), role: 'admin'},
-//         { name: 'Crimes Johnsson', email: 'crimes.johnsson@fuskeluring.hack', password: pass2, counter: 0, date: Date.now()},
-//         { name: 'Mike Murdering', email: 'murdering.mike@fuskeluring.hack', password: pass3, counter: 0, date: Date.now()},
-//       ]).then(() => { 
-//         return User.findAll();
-//       }).catch(error=>{
-//           console.log(error)
-//       })
-
-// }).catch((err)=>{
-//     console.log("Looks like we got some error")
-//     console.log(err)
-// })
